@@ -1,4 +1,0 @@
-Npm i
-criar todo_db
-npm run dev
-npx prisma migrate dev --name init
