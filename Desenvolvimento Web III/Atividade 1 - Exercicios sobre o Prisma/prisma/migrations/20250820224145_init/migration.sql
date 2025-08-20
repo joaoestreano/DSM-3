@@ -1,0 +1,32 @@
+CREATE TABLE "public"."pessoa" (
+    "id" SERIAL NOT NULL,
+    "nome" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+
+    CONSTRAINT "pessoa_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "public"."carro" (
+    "id" SERIAL NOT NULL,
+    "modelo" TEXT NOT NULL,
+    "marca" TEXT NOT NULL,
+    "ano" INTEGER NOT NULL,
+
+    CONSTRAINT "carro_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "public"."pessoa_por_carro" (
+    "id" SERIAL NOT NULL,
+    "pessoaId" INTEGER NOT NULL,
+    "carroId" INTEGER NOT NULL,
+
+    CONSTRAINT "pessoa_por_carro_pkey" PRIMARY KEY ("id")
+);
+
+CREATE UNIQUE INDEX "pessoa_email_key" ON "public"."pessoa"("email");
+
+CREATE UNIQUE INDEX "pessoa_por_carro_pessoaId_carroId_key" ON "public"."pessoa_por_carro"("pessoaId", "carroId");
+
+ALTER TABLE "public"."pessoa_por_carro" ADD CONSTRAINT "pessoa_por_carro_pessoaId_fkey" FOREIGN KEY ("pessoaId") REFERENCES "public"."pessoa"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE "public"."pessoa_por_carro" ADD CONSTRAINT "pessoa_por_carro_carroId_fkey" FOREIGN KEY ("carroId") REFERENCES "public"."carro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
