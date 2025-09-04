@@ -1,0 +1,174 @@
+/* Importa a fonte Google Fonts para uma tipografia mais agradável */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Estilos gerais do corpo da página */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f7f9;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Títulos principais */
+h1, h2 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilo do formulário */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Estilo dos campos de entrada */
+input {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  flex-grow: 1;
+  min-width: 150px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+/* Estilo do botão */
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2ecc71;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #27ae60;
+}
+
+/* Estilo da lista de produtos */
+ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Estilo de cada item da lista */
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para o modal de edição */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-conteudo {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.fechar {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.fechar:hover,
+.fechar:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-conteudo form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-conteudo label {
+  font-weight: 600;
+}
+
+/* Estilos para os botões de ação */
+.acoes {
+  display: flex;
+  gap: 10px;
+}
+
+.acoes button {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.acoes button:nth-child(1) { /* Editar */
+  background-color: #3498db;
+}
+
+.acoes button:nth-child(1):hover {
+  background-color: #2980b9;
+}
+
+.acoes button:nth-child(2) { /* Remover */
+  background-color: #e74c3c;
+}
+
+.acoes button:nth-child(2):hover {
+  background-color: #c0392b;
+}
