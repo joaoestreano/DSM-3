@@ -1,0 +1,103 @@
+Questão 1
+db.jogadores.insertOne({ nome: "Primeiro Jogador", nickname: "Player1" })
+db.torneios.insertOne({ nome: "Torneio Inicial", jogo: "LOL", premio: "R$ 1000" })
+db.partidas.insertOne({ id_partida: 1, placar: "3-1", data: new Date() })
+
+Questão 2
+[
+  {
+    "_id": ObjectId("6514f7b4e9e0c704170845c4"),
+    "nome": "Campeonato de Valorant 2025",
+    "jogo": "Valorant",
+    "data_inicio": ISODate("2025-10-20T14:00:00Z"),
+    "data_fim": ISODate("2025-10-27T20:00:00Z"),
+    "premio": {
+      "valor": 5000,
+      "moeda": "BRL"
+    },
+    "inscritos": [
+      {
+        "id_jogador": ObjectId("6514f7b4e9e0c704170845c5"),
+        "nickname": "NinjaWarrior",
+        "email": "ninja@email.com",
+        "data_inscricao": ISODate("2025-10-01T10:00:00Z")
+      },
+      {
+        "id_jogador": ObjectId("6514f7b4e9e0c704170845c6"),
+        "nickname": "CyberGhost",
+        "email": "cyber@email.com",
+        "data_inscricao": ISODate("2025-10-02T12:30:00Z")
+      }
+    ]
+  }
+]
+
+Questão 3
+[
+  {
+    "_id": ObjectId("6514f7b4e9e0c704170845c4"),
+    "nome": "Campeonato de Valorant 2025",
+    "jogo": "Valorant",
+    "data_inicio": ISODate("2025-10-20T14:00:00Z"),
+    "data_fim": ISODate("2025-10-27T20:00:00Z"),
+    "premio": {
+      "valor": 5000,
+      "moeda": "BRL"
+    },
+    "jogadores_inscritos": [
+      ObjectId("6514f7b4e9e0c704170845c5"),
+      ObjectId("6514f7b4e9e0c704170845c6")
+    ]
+  }
+]
+
+[
+  {
+    "_id": ObjectId("6514f7b4e9e0c704170845c5"),
+    "nickname": "NinjaWarrior",
+    "email": "ninja@email.com",
+    "regiao": "SP",
+    "jogos_favoritos": ["Valorant", "CS2"]
+  },
+  {
+    "_id": ObjectId("6514f7b4e9e0c704170845c6"),
+    "nickname": "CyberGhost",
+    "email": "cyber@email.com",
+    "regiao": "RJ",
+    "jogos_favoritos": ["Valorant", "League of Legends"]
+  }
+]
+
+Questão 4
+Embedding (Incorporação)
+​Quando usar: Quando você precisa dos dados do jogador toda vez que consulta um torneio.
+Vantagem: Consultas super rápidas.
+Desvantagem: Dados duplicados e risco de documentos grandes.
+​Referencing (Referência)
+​Quando usar: Quando os dados do jogador são independentes e você precisa de escalabilidade.
+Vantagem: Dados centralizados (sem duplicação) e mais flexibilidade.
+Desvantagem: Consultas um pouco mais complexas (requerem $lookup).
+
+Questão 5
+db.torneios.find({ "premio.valor": { $gte: 4000 } })
+
+Questão 6
+db.jogadores.find({
+  "pais_origem": "Brasil",
+  "idade": { $gt: 21 }
+})
+
+Questão 7
+db.jogadores.find({ "nick": { $exists: true } })
+
+Questão 8
+db.torneios.updateOne(
+  { nome: "copa CS:GO" },
+  { $set: { status: "ativo" } }
+)
+
+Questão 9
+db.jogadores.deleteOne({ "nome": "Pedro" })
+
+Questão 10
+db.torneios.find().sort({ "premio.valor": -1 }).skip(1).limit(1)
