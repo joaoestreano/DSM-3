@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Jogos API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Catálogo de Jogos</h1>
+    </header>
+
+    <main>
+        <h2>Adicionar Novo Jogo</h2>
+        <form id="form-jogo">
+            <input type="hidden" id="jogo-id"> <input type="text" id="nome" placeholder="Nome do Jogo" required>
+            <input type="text" id="categoria" placeholder="Categoria" required>
+            <input type="number" id="preco" placeholder="Preço" step="0.01" min="0" required>
+            <input type="number" id="estoque" placeholder="Estoque" min="0" required>
+            <button type="submit" id="btn-submit">Adicionar Jogo</button>
+        </form>
+
+        <hr>
+
+        <h2>Jogos Cadastrados</h2>
+        <table id="tabela-jogos">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
