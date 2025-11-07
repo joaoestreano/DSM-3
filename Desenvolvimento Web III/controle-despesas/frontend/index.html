@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Controle de Despesas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Controle de Despesas</h1>
+
+    <form id="expense-form">
+      <div class="form-row">
+        <label>Descrição</label>
+        <input type="text" id="description" required />
+      </div>
+      <div class="form-row">
+        <label>Valor (R$)</label>
+        <input type="number" id="amount" step="0.01" min="0" required />
+      </div>
+      <div class="form-row">
+        <label>Data</label>
+        <input type="date" id="date" />
+      </div>
+      <div class="form-row">
+        <button type="submit" id="submit-btn">Cadastrar Despesa</button>
+        <button type="button" id="cancel-edit" class="hidden">Cancelar</button>
+      </div>
+    </form>
+
+    <div class="total">
+      <strong>Total:</strong> <span id="total">R$ 0,00</span>
+    </div>
+
+    <ul id="expenses-list" class="expenses-list"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
