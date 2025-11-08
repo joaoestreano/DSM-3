@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WeatherApp 🌤️</title>
+  <link rel="stylesheet" href="/public/css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>🌦️ Consulta do Clima</h1>
+    <form id="search-form" autocomplete="off">
+      <div class="input-group">
+        <input id="city-input" list="city-list" placeholder="Digite uma cidade..." />
+        <datalist id="city-list">
+          <option value="São Paulo"></option>
+          <option value="Rio de Janeiro"></option>
+          <option value="Belo Horizonte"></option>
+          <option value="Curitiba"></option>
+          <option value="Porto Alegre"></option>
+          <option value="Brasília"></option>
+          <option value="Recife"></option>
+          <option value="Fortaleza"></option>
+          <option value="Manaus"></option>
+          <option value="Salvador"></option>
+        </datalist>
+        <button type="submit">Buscar</button>
+      </div>
+      <button type="button" id="loc-btn" class="secondary-btn">📍 Usar minha localização</button>
+    </form>
+
+    <div id="result" class="result">
+      <p class="placeholder">Pesquise uma cidade para ver o clima atual 🌤️</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Feito com ☕ por <strong>João Victor Estreano</strong></p>
+  </footer>
+
+  <script src="/public/js/main.js"></script>
+</body>
+</html>
