@@ -1,0 +1,20 @@
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
+body { margin: 0; padding: 0; background: #f6f6f8; color: #222; }
+header { background: #222; color: white; padding: 16px; text-align: center; }
+main { display: flex; gap: 24px; padding: 24px; max-width: 1100px; margin: 0 auto; }
+.form-section, .list-section { background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.form-section { width: 320px; }
+.list-section { flex: 1; overflow-x: auto; }
+.row { margin-bottom: 10px; display:flex; flex-direction:column; }
+.row label { margin-bottom: 6px; font-weight: bold; font-size: 13px; }
+.row input, .row select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+.actions { display:flex; gap:8px; }
+button { padding: 8px 12px; border-radius:6px; border: none; cursor: pointer; }
+button#salvar { background: #2b8aef; color: white; }
+button#cancelar { background: #eee; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px; text-align: left; border-bottom: 1px solid #eee; }
+.actions-btn { display:flex; gap:6px; }
+.small-btn { padding: 6px 8px; border-radius:6px; font-size:13px; cursor:pointer; }
+.edit { background: #ffd54f; border: none; }
+.delete { background: #ff6b6b; color: white; border: none; }
