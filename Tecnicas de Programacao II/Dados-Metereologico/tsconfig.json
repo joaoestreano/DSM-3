@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    /* Base Options */
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    /* Strictness */
+    "strict": true,
+    "skipLibCheck": true,
+    
+    /* Adicional - Corrige o erro TS1295 */
+    "verbatimModuleSyntax": false
+  }
+}
