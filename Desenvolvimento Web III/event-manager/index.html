@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Eventos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mb-4 text-center">🎉 Gerenciador de Eventos</h1>
+
+        <div id="feedback-alert" class="alert d-none" role="alert"></div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 id="form-title">Adicionar Novo Evento</h4>
+            </div>
+            <div class="card-body">
+                <form id="evento-form">
+                    <input type="hidden" id="evento-id">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="titulo" class="form-label">Título do Evento</label>
+                            <input type="text" class="form-control" id="titulo" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="data" class="form-label">Data</label>
+                            <input type="date" class="form-control" id="data" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="local" class="form-label">Local</label>
+                            <input type="text" class="form-control" id="local" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="descricao" class="form-label">Descrição (Opcional)</label>
+                            <textarea class="form-control" id="descricao" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="valor" class="form-label">Valor (Float)</label>
+                            <input type="number" step="0.01" class="form-control" id="valor" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3" id="submit-btn">Criar Evento</button>
+                    <button type="button" class="btn btn-secondary mt-3 d-none" id="cancel-btn">Cancelar Edição</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Lista de Eventos</h4>
+                <div class="d-flex">
+                    <input type="text" id="search-input" class="form-control me-2" placeholder="Pesquisar por Título">
+                    <button class="btn btn-outline-success"
+                        onclick="fetchEventos(document.getElementById('search-input').value)">Pesquisar</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Descrição</th>
+                                <th>Local</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventos-list">
+                            <tr>
+                                <td colspan="5" class="text-center">Carregando eventos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api/eventos';
+        const form = document.getElementById('evento-form');
+        const eventosList = document.getElementById('eventos-list');
+        const feedbackAlert = document.getElementById('feedback-alert');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+
+        // --- Funções de Utilidade ---
+
+        // Função para exibir mensagens de sucesso ou erro
+        function showAlert(message, type) {
+            feedbackAlert.textContent = message;
+            feedbackAlert.className = `alert alert-${type}`;
+            // Remove as classes de cor anteriores
+            feedbackAlert.classList.remove('alert-success', 'alert-danger', 'alert-warning', 'd-none');
+            // Adiciona a classe de cor correta e torna visível
+            feedbackAlert.classList.add(`alert-${type}`);
+
+            setTimeout(() => {
+                feedbackAlert.classList.add('d-none'); // Esconde após 5 segundos
+            }, 5000);
+        }
+
+        // Função para formatar a data
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        // --- Funções CRUD ---
+
+        // Ler: Listar todos os eventos ou pesquisar por título
+        async function fetchEventos(titulo = '') {
+            eventosList.innerHTML = '<tr><td colspan="5" class="text-center">Carregando...</td></tr>';
+            try {
+                const url = titulo ? `${API_URL}?titulo=${titulo}` : API_URL;
+                const response = await fetch(url);
+                const eventos = await response.json();
+
+                if (response.status === 404) {
+                    eventosList.innerHTML = `<tr><td colspan="5" class="text-center text-danger">${eventos.message}</td></tr>`;
+                    return;
+                }
+
+                if (!response.ok) throw new Error(eventos.error || 'Falha ao buscar eventos');
+
+                renderEventos(eventos);
+
+            } catch (error) {
+                showAlert(`Erro ao carregar eventos: ${error.message}`, 'danger');
+                eventosList.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erro ao carregar eventos.</td></tr>';
+            }
+        }
+
+        // Renderizar a tabela de eventos
+        function renderEventos(eventos) {
+            eventosList.innerHTML = '';
+            if (eventos.length === 0) {
+                eventosList.innerHTML = '<tr><td colspan="5" class="text-center">Nenhum evento cadastrado.</td></tr>';
+                return;
+            }
+
+            eventos.forEach(evento => {
+                const row = eventosList.insertRow();
+                row.innerHTML = `
+        <td><strong>${evento.titulo}</strong></td>
+        <td>${evento.descricao || 'N/A'}</td> <td>${evento.local}</td>
+        <td>${formatDate(evento.data)}</td>
+        <td>R$ ${evento.valor.toFixed(2).replace('.', ',')}</td>
+        <td>
+            <button class="btn btn-sm btn-info me-2" onclick="editEvento('${evento._id}', '${evento.titulo}', '${evento.descricao}', '${evento.data.substring(0, 10)}', '${evento.local}', ${evento.valor})">Editar</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteEvento('${evento._id}', '${evento.titulo}')">Excluir</button>
+        </td>
+    `;
+            });
+        }
+
+        // Criar/Atualizar Evento
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const eventoId = document.getElementById('evento-id').value;
+            const method = eventoId ? 'PUT' : 'POST';
+            const url = eventoId ? `${API_URL}/${eventoId}` : API_URL;
+
+            const data = {
+                titulo: document.getElementById('titulo').value,
+                descricao: document.getElementById('descricao').value,
+                data: document.getElementById('data').value,
+                local: document.getElementById('local').value,
+                // Converte valor para Float
+                valor: parseFloat(document.getElementById('valor').value),
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    resetForm();
+                    fetchEventos();
+                } else {
+                    showAlert(`Erro: ${result.message || 'Verifique os dados.'}`, 'danger');
+                }
+            } catch (error) {
+                showAlert(`Erro de conexão: ${error.message}`, 'danger');
+            }
+        });
+
+        // Excluir Evento
+        async function deleteEvento(id, titulo) {
+            if (!confirm(`Tem certeza que deseja remover o evento: "${titulo}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert(result.message, 'success');
+                    fetchEventos();
+                } else {
+                    showAlert(`Erro: ${result.message || 'Falha na exclusão.'}`, 'danger');
+                }
+            } catch (error) {
+                showAlert(`Erro de conexão: ${error.message}`, 'danger');
+            }
+        }
+
+        // Preencher o formulário para edição
+        function editEvento(id, titulo, descricao, data, local, valor) {
+            document.getElementById('evento-id').value = id;
+            document.getElementById('titulo').value = titulo;
+            document.getElementById('descricao').value = descricao === 'undefined' ? '' : descricao;
+            document.getElementById('data').value = data;
+            document.getElementById('local').value = local;
+            document.getElementById('valor').value = valor;
+
+            // Altera o formulário para modo Edição
+            formTitle.textContent = 'Editar Evento';
+            submitBtn.textContent = 'Atualizar Evento';
+            submitBtn.classList.remove('btn-primary');
+            submitBtn.classList.add('btn-warning');
+            cancelBtn.classList.remove('d-none');
+        }
+
+        // Resetar o formulário para o modo Criação
+        function resetForm() {
+            document.getElementById('evento-id').value = '';
+            form.reset();
+            formTitle.textContent = 'Adicionar Novo Evento';
+            submitBtn.textContent = 'Criar Evento';
+            submitBtn.classList.remove('btn-warning');
+            submitBtn.classList.add('btn-primary');
+            cancelBtn.classList.add('d-none');
+        }
+
+        // Adiciona o listener ao botão de cancelar
+        cancelBtn.addEventListener('click', resetForm);
+
+        // --- Inicialização ---
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchEventos(); // Carrega os eventos ao iniciar a página
+        });
+
+    </script>
+</body>
+
+</html>
