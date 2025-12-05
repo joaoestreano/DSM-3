@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ordens de Serviço</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #bbb;
+      margin-bottom: 30px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px;
+      background: #0d6efd;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #084dbf;
+    }
+    .ordem {
+      background: #eee;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .linha {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Ordens de Serviço</h1>
+
+  <div class="container">
+    <h2>Cadastrar Nova Ordem</h2>
+
+    <input id="titulo" placeholder="Título" required />
+    <textarea id="descricao" placeholder="Descrição" required></textarea>
+
+    <select id="status">
+      <option value="aberta">Aberta</option>
+      <option value="em andamento">Em andamento</option>
+      <option value="concluída">Concluída</option>
+    </select>
+
+    <select id="prioridade">
+      <option value="baixa">Baixa</option>
+      <option value="média">Média</option>
+      <option value="alta">Alta</option>
+    </select>
+
+    <input id="responsavel" placeholder="Responsável (opcional)" />
+    <input id="setor" placeholder="Setor solicitante" required />
+    <input type="date" id="prazo" />
+    <input type="number" step="0.01" id="valor" placeholder="Valor do serviço" required />
+
+    <button onclick="criarOrdem()">Salvar Ordem</button>
+  </div>
+
+  <div class="container">
+    <h2>Lista de Ordens</h2>
+    <div id="lista"></div>
+  </div>
+
+<script>
+  const API = "http://localhost:3000/ordens";
+
+  function getInputValue(id) {
+    const element = document.getElementById(id);
+    return element ? element.value : null;
+  }
+
+  async function criarOrdem() {
+    // Obtendo valores explicitamente por ID
+    const titulo = getInputValue("titulo");
+    const descricao = getInputValue("descricao");
+    const status = getInputValue("status");
+    const prioridade = getInputValue("prioridade");
+    const responsavel = getInputValue("responsavel");
+    const setor = getInputValue("setor");
+    const prazo = getInputValue("prazo");
+    const valor = getInputValue("valor");
+
+    const ordem = {
+      titulo: titulo,
+      descricao: descricao,
+      status: status,
+      prioridade: prioridade,
+      responsavel: responsavel || null,
+      setor: setor,
+      prazo: prazo || null,
+      valor: parseFloat(valor) || 0
+    };
+
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ordem),
+    });
+
+    if (res.status === 201) {
+      alert("✅ Ordem criada com sucesso!");
+      listarOrdens();
+    } else {
+      const erro = await res.json();
+      const detalhes = erro.details ? erro.details.join('\n- ') : JSON.stringify(erro);
+      alert(`❌ Erro ao criar ordem! Status: ${res.status}\n\nDetalhes:\n- ${detalhes}`);
+    }
+  }
+
+  async function listarOrdens() {
+    const res = await fetch(API);
+    const ordens = await res.json();
+
+    const lista = document.getElementById("lista");
+    
+    if (lista) { 
+      lista.innerHTML = "";
+
+      ordens.forEach(o => {
+        const valorFormatado = (typeof o.valor === 'number' ? o.valor : parseFloat(o.valor || 0)).toFixed(2);
+        
+        lista.innerHTML += `
+          <div class="ordem">
+            <div class="linha"><b>${o.titulo}</b></div>
+            <div class="linha">${o.descricao}</div>
+            <div class="linha">Status: ${o.status}</div>
+            <div class="linha">Prioridade: ${o.prioridade}</div>
+            <div class="linha">Responsável: ${o.responsavel || "Não definido"}</div>
+            <div class="linha">Setor: ${o.setor}</div>
+            <div class="linha">Valor: R$ ${valorFormatado}</div>
+            <button onclick="excluirOrdem('${o._id}')">Excluir</button>
+          </div>
+        `;
+      });
+    }
+  }
+
+  async function excluirOrdem(id) {
+    await fetch(API + "/" + id, { method: "DELETE" });
+    alert("Ordem excluída!");
+    listarOrdens();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    listarOrdens();
+  });
+</script>
+
+</body>
+</html>
