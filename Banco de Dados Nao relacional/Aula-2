@@ -1,0 +1,41 @@
+. Inserir documentos no MongoDB 
+db.createCollection("dados_meteorologicos") 
+
+db.dados_meteorologicos.insertOne({ 
+  cidade: "São Paulo", 
+  temperatura: 25, 
+  umidade: 70, 
+  data: "2025-02-10" 
+}) 
+
+db.dados_meteorologicos.insertOne({ 
+  cidade: "Rio de Janeiro", 
+  temperatura: 28.3, 
+  umidade: 65, 
+  data: "2025-02-11" 
+}) 
+
+db.dados_meteorologicos.insertOne({ 
+  cidade: "Belo Horizonte", 
+  temperatura: 30, 
+  umidade: 88, 
+  data: "2025-02-12" 
+}) 
+
+db.dados_meteorologicos.insertOne({ 
+  cidade: "Vitória", 
+  temperatura: 19, 
+  umidade: 80, 
+  data: "2025-02-12" 
+}) 
+
+. Atualizar a temperatura de uma cidade e verificar 
+db.dados_meteorologicos.updateOne( 
+  { cidade: "São Paulo" }, 
+  { $set: { temperatura: 13 } } 
+) 
+db.dados_meteorologicos.find({ cidade: "São Paulo" }) 
+
+. Remover um registro e confirmar exclusão 
+db.dados_meteorologicos.deleteOne({ cidade: "São Paulo" }) 
+db.dados_meteorologicos.find({ cidade: "São Paulo" }) 
